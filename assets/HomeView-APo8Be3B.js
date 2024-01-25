@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-x3n3nnut.js";import{c as o,o as c}from"./index-TGdeQlIt.js";const r={};function t(n,a){return c(),o("main")}const m=e(r,[["render",t]]);export{m as default};
