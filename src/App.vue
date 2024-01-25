@@ -1,9 +1,9 @@
 <template>
-  <header>
+  <header class="container">
     <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+      <nav class="d-flex">
+        <RouterLink class="nav-link fs-2" to="/">Home</RouterLink>
+        <RouterLink class="nav-link fs-2" to="/about">About</RouterLink>
       </nav>
     </div>
   </header>
