@@ -5,7 +5,7 @@
       <div class="outputArea position-relative">
         <div class="position-absolute fw-bold top-10
         start-10" v-if="symbol">{{ symbol }}</div>
-        <div class="p-10 text-end fs-2 fw-bold">{{ symbol === '='? total : str === '-0'? '-0' : Number(str) }}</div>
+        <div class="p-10 text-end fs-2 fw-bold">{{ symbol === '='? Number(str)? Number(str) : total : str === '-0'? '-0' : Number(str) }}</div>
         <p class="text-end text-danger my-5 fw-bold px-10" v-if="prompt">最多 10 位數字</p>
       </div>
       <div class="buttonArea">
@@ -45,10 +45,18 @@
   function storeStr(e) {
     const reg = new RegExp('^-?[\\d]{1,9}$');
     reg.test(Number(str.value))? str.value += e.target.textContent : prompt.value = true;
+    if(symbol.value === '=' && Number(str.value)){
+      store1.value = 0;
+      store2.value = 0;
+      total.value = 0;
+      symbol.value = '';
+      counting.value = false;
+    }
   }
   function clickArithmetic(e) { 
     prompt.value = false;
     if(symbol.value){
+      Number(str.value) && symbol.value === '='? total.value = Number(str.value) : '';
       symbol.value = e.target.textContent;
       str.value = '0';
     }else{
@@ -98,6 +106,19 @@
         total.value = regToFixedTwo.test(Number((total.value).toFixed(2)))? total.value : Number((total.value).toFixed(2));
         break;
       case '/':
+        if(counting.value){
+          if(store1.value === 0){
+            alert('除數不得為零！！！');
+            reset();
+            return;
+          }
+        }else{
+          if(store2.value === 0){
+            alert('除數不得為零！！！');
+            reset();
+            return;
+          }
+        }
         counting.value? total.value /= store1.value : total.value = store1.value / store2.value;
         total.value = regToFixedTwo.test(Number((total.value).toFixed(2)))? total.value : Number((total.value).toFixed(2));
         break;
@@ -120,7 +141,6 @@
         alert('數值過大，無法計算！！！');
       }
     }else{
-      console.log(regInt.test(total.value));
       if(!regInt.test(total.value)){
         reset();
         alert('數值過大，無法計算！！！');
