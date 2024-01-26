@@ -47,6 +47,7 @@
     reg.test(Number(str.value))? str.value += e.target.textContent : prompt.value = true;
   }
   function clickArithmetic(e) { 
+    prompt.value = false;
     if(symbol.value){
       symbol.value = e.target.textContent;
       str.value = '0';
@@ -67,6 +68,7 @@
     }
   }
   function count() { 
+    prompt.value = false;
     if(counting.value){
       store1.value = Number(str.value);
     }else{
@@ -83,6 +85,7 @@
     checkTotal();
   }
   function arithmetic() {
+    const regToFixedTwo = new RegExp('^-?\\d?.00$');
     switch (symbol.value) {
       case '+':
         counting.value? total.value += store1.value : total.value = store1.value + store2.value;
@@ -92,9 +95,11 @@
         break;
       case '*':
         counting.value? total.value *= store1.value : total.value = store1.value * store2.value;
+        total.value = regToFixedTwo.test(Number((total.value).toFixed(2)))? total.value : Number((total.value).toFixed(2));
         break;
       case '/':
         counting.value? total.value /= store1.value : total.value = store1.value / store2.value;
+        total.value = regToFixedTwo.test(Number((total.value).toFixed(2)))? total.value : Number((total.value).toFixed(2));
         break;
       default:
         alert('操作錯誤，請重試！！！');
@@ -106,11 +111,20 @@
     symbol.value = '=';
   }
   function checkTotal() { 
-    const regInt = new RegExp('^-?[\\d]{10}$');
-    const regFloat = new RegExp('^-?[\\d\\.]{11}$');
-    if(regInt.test(total.value) || regFloat.test(total.value)){
-      reset();
-      alert('數值過大，無法計算！！！');
+    const regInt = new RegExp('^-?[\\d]{0,10}$');
+    const regFloat = new RegExp('^-?\\d{0,10}.[\\d]{0,2}$');
+    
+    if(String(total.value).includes('.')){
+      if(!regFloat.test(total.value)){
+        reset();
+        alert('數值過大，無法計算！！！');
+      }
+    }else{
+      console.log(regInt.test(total.value));
+      if(!regInt.test(total.value)){
+        reset();
+        alert('數值過大，無法計算！！！');
+      }
     }
   }
   function reset() { 
@@ -123,6 +137,7 @@
     prompt.value = false;
   }
   function del() { 
+    prompt.value = false;
     Object.is(Number(str.value.slice(0,-1)),-0)? str.value = '-0' : str.value.slice(0,-1) === '-'? str.value = '0' : str.value = str.value.slice(0,-1);
   }
 </script>
