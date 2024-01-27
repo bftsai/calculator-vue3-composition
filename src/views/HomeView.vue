@@ -44,19 +44,30 @@
 
   function storeStr(e) {
     const reg = new RegExp('^-?[\\d]{1,9}$');
-    reg.test(Number(str.value))? str.value += e.target.textContent : prompt.value = true;
-    if(symbol.value === '=' && Number(str.value)){
+    if(symbol.value === '='){
       store1.value = 0;
       store2.value = 0;
-      total.value = 0;
+      str.value = String(total.value);
       symbol.value = '';
       counting.value = false;
     }
+    reg.test(Number(str.value))? str.value += e.target.textContent : prompt.value = true;
   }
   function clickArithmetic(e) { 
     prompt.value = false;
     if(symbol.value){
-      Number(str.value) && symbol.value === '='? total.value = Number(str.value) : '';
+      const reg = RegExp('^[+-/\\*]');
+      if(Number(str.value) && symbol.value === '='){
+        total.value = Number(str.value);
+      }else if(reg.test(symbol.value) && counting.value){
+        store1.value = Number(str.value);
+        arithmetic(symbol.value);
+      }else if(!counting.value && symbol.value !== '='){
+        total.value = store1.value;
+        store1.value = Number(str.value);
+        counting.value = true;
+        arithmetic(symbol.value);
+      }
       symbol.value = e.target.textContent;
       str.value = '0';
     }else{
@@ -87,14 +98,18 @@
         store2.value = Number(str.value);
       }
     }
+    
     arithmetic();
-    str.value = '0';
     counting.value = true;
+    str.value = '0';
     checkTotal();
   }
-  function arithmetic() {
+  function arithmetic(inputSymbol = '') {
     const regToFixedTwo = new RegExp('^-?\\d?.00$');
-    switch (symbol.value) {
+    const symbolSwitch = inputSymbol || symbol.value;
+    inputSymbol? '' : symbol.value = '=';
+    
+    switch (symbolSwitch) {
       case '+':
         counting.value? total.value += store1.value : total.value = store1.value + store2.value;
         break;
@@ -125,11 +140,10 @@
       default:
         alert('操作錯誤，請重試！！！');
         reset();
-        break;
+        return;
     }
     store1.value = 0;
     store2.value = 0;
-    symbol.value = '=';
   }
   function checkTotal() { 
     const regInt = new RegExp('^-?[\\d]{0,10}$');
