@@ -76,13 +76,9 @@
       store2.value = Number(str.value);
       str.value = '0';
       }else{
-        if(str.value === '0' && e.target.textContent === '-'){
-          str.value = '-0';
-        }else{
-          symbol.value = e.target.textContent;
-          store1.value = Number(str.value);
-          str.value = '0';
-        }
+        symbol.value = e.target.textContent;
+        store1.value = Number(str.value);
+        str.value = '0';
       }
     }
   }
